@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
 const secretKey = 'your_secret_key';
 const MailService= require('../Services/MailSetup');
+const path = require('path');
 
 class UserController {
   async registerUser(req, res) {
@@ -199,14 +200,14 @@ class UserController {
 
   }
   async sendWelcomeEmail(req,res) {
-    const subject = 'Welcome to Our Service';
-    const text = 'Thank you for signing up!';
-    const html = '<h1>Thank you for signing up!</h1>';
-    const userEmail='iafshivam4@gmail.com';
+   
   
     try {
-     await userModel.sendMailToAdmin(subject,text,html);
-      return res.status(200).json({ message: 'Email sent' });
+      const uploadsDir = path.join(__dirname, 'uploads'); // Adjust this if needed
+
+  
+      // Respond with the exact directory path
+      res.json({ directoryPath: uploadsDir });
 
     } catch (error) {
       console.log(error);
