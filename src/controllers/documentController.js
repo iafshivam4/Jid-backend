@@ -31,7 +31,7 @@ const uploadDocument = (req, res) => {
         // Return the Cloudinary URL
         res.status(200).json({
           message: 'Document uploaded successfully',
-          cloudinaryUrl: result.secure_url, // Cloudinary URL for the uploaded file
+          path: result.secure_url, // Cloudinary URL for the uploaded file
         });
       }).end(req.file.buffer); // End the upload stream with the file buffer
     } else {
