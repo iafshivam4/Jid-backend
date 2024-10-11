@@ -11,7 +11,10 @@ cloudinary.config({
 
 // Multer configuration
 const storage = multer.memoryStorage(); // Store files in memory
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
+});
 
 // Controller function
 const uploadDocument = (req, res) => {
@@ -20,22 +23,27 @@ const uploadDocument = (req, res) => {
       return res.status(400).json({ error: err.message });
     }
 
-    // Upload to Cloudinary
-    if (req.file) {
+    // Check if the uploaded file is a PDF
+    if (req.file && req.file.mimetype === 'application/pdf') {
       const uniqueId = uuidv4(); // Generate a unique ID for the file
-      cloudinary.uploader.upload_stream({ public_id: uniqueId }, (error, result) => {
-        if (error) {
-          return res.status(400).json({ error: error.message });
-        }
+      const publicIdWithPdfExtension = `${uniqueId}.pdf`; // Append .pdf to the public_id
 
-        // Return the Cloudinary URL
-        res.status(200).json({
-          message: 'Document uploaded successfully',
-          path: result.secure_url, // Cloudinary URL for the uploaded file
-        });
-      }).end(req.file.buffer); // End the upload stream with the file buffer
+      cloudinary.uploader.upload_stream(
+        { public_id: publicIdWithPdfExtension, resource_type: 'raw', format: 'pdf' }, // Use 'raw' and force 'pdf' format
+        (error, result) => {
+          if (error) {
+            return res.status(400).json({ error: error.message });
+          }
+
+          // Return the Cloudinary URL with .pdf extension
+          res.status(200).json({
+            message: 'Document uploaded successfully',
+            path: result.secure_url, // Cloudinary URL for the uploaded file
+          });
+        }
+      ).end(req.file.buffer); // End the upload stream with the file buffer
     } else {
-      return res.status(400).json({ error: 'Please upload a document' });
+      return res.status(400).json({ error: 'Please upload a PDF document' });
     }
   });
 };
