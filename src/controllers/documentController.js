@@ -4,6 +4,7 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+   console.log(__dirname); 
     cb(null, 'src/controllers/uploads'); //
   },
   filename: (req, file, cb) => {
@@ -16,6 +17,7 @@ const fileFilter = (req, file, cb) => {
   const allowedTypes = ['.pdf', '.doc', '.docx', '.txt','.png'];
   const ext = path.extname(file.originalname).toLowerCase();
   if (allowedTypes.includes(ext)) {
+  
     cb(null, true);
   } else {
     cb(new Error('Only documents are allowed'), false);
