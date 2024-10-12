@@ -250,7 +250,7 @@ class UserController {
       try{
         if(req.user.role=="admin"){
           let [result] = await db.query("SELECT doc_name FROM documents WHERE user_id=? AND is_verified=-1 AND is_verified=0",[req.params.user_id]);
-          if(result.length==0){
+          if(result.length>0){
             let [query1]= await db.query("SELECT * FROM offer_letter WHERE user_id=?",[req.params.user_id]);
             if(query1.length==0){
               let [query2]= await db.query("INSERT INTO offer_letter(user_id,offer_letter_path) values(?,?)",[req.params.user_id,req.body.offer_letter_path]);
