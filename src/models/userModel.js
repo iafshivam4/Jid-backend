@@ -187,10 +187,10 @@ class UserController {
       try{
         if(req.user.role=="admin"){
           if(req.query.jid){
-            let [result] = await db.query("SELECT * FROM users WHERE jid=?",[req.query.jid]);
+            let [result] = await db.query("SELECT * FROM users WHERE jid=? && otp_verified=1",[req.query.jid]);
             return result;
           }
-          const [query]=await  db.query("SELECT * FROM users ");
+          const [query]=await  db.query("SELECT * FROM users WHERE otp_verified=1");
           return query;
 
         }else{
