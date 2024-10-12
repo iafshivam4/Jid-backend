@@ -216,6 +216,9 @@ class UserController {
         let[doc]=await db.query("SELECT * FROM documents WHERE id=?",[req.params.doc_id]);
         let user_id=doc[0].user_id;
         let[user]=await db.query("SELECT * FROM users WHERE id=?",[user_id]);
+        let subject;
+        let text;
+        let html;
         if(req.body.is_verified==-1){
           subject="Document Rejected By JID Admin";
           text = `Sorry! Your ${doc[0].doc_type} is rejected by JID admin`;
