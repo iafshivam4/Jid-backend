@@ -249,7 +249,7 @@ class UserController {
 
       try{
         if(req.user.role=="admin"){
-          let [result] = await db.query("SELECT doc_name FROM documents WHERE user_id=? AND is_verified=-1 AND is_verified=0",[req.params.user_id]);
+          let [result] = await db.query("SELECT doc_name FROM documents WHERE user_id=? AND is_verified=-1",[req.params.user_id]);
           if(result.length==0){
             let [query1]= await db.query("SELECT * FROM offer_letter WHERE user_id=?",[req.params.user_id]);
             let [user]= await db.query("SELECT * FROM users WHERE id=?",[req.params.user_id])
