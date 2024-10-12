@@ -212,6 +212,23 @@ class UserController {
       try{
         if(req.user.role=="admin"){
         let [result] = await db.query("UPDATE documents SET is_verified=? WHERE id=?",[req.body.is_verified,req.params.doc_id]);
+
+        let[doc]=await db.query("SELECT * FROM documents WHERE id=?",[req.params.doc_id]);
+        let user_id=doc[0].user_id;
+        let[user]=await db.query("SELECT * FROM users WHERE id=?",[user_id]);
+        if(req.body.is_verified==-1){
+          subject="Document Rejected By JID Admin";
+          text = `Sorry! Your ${doc[0].doc_type} is rejected by JID admin`;
+          html = `<p>Sorry! Your ${doc[0].doc_type} is rejected by JID admin</p>`;
+          await this.sendMailToUser(subject,text,html,user[0].email);
+        }else{
+          subject="Document Accepted By JID Admin";
+          text = `Congrats! Your ${doc[0].doc_type} is accepted by JID admin`;
+          html = `<p>Sorry! Your ${doc[0].doc_type} is accepted by JID admin</p>`;
+          await this.sendMailToUser(subject,text,html,user[0].email);
+
+        }
+        
         return result;
 
         }else{
