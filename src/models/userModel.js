@@ -267,7 +267,7 @@ class UserController {
             }
 
           }else{
-            throw new Error('Some Documents are rejected or in pending state, please accept all to upload offer letter');
+            throw new Error('Some Documents was rejected, You can not upload offer letter');
 
 
           }
